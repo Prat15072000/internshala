@@ -123,14 +123,20 @@ class _OrderStatusState extends State<OrderStatus> {
               SizedBox(
                 height: 10.h,
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Color(0xffF2F2F2),
-                    borderRadius: BorderRadius.circular(20)),
-                height: 500.h,
-                width: 330.w,
-                child: SingleChildScrollView(
-                  child: Container(
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text('Order Status'),
+                      Text('Success'),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xffF2F2F2),
+                        borderRadius: BorderRadius.circular(20)),
+                    height: 500.h,
+                    width: 330.w,
                     child: FutureBuilder<Transaction>(
                       future: API_Manager.getDetails(),
                       builder: (context, snapshot) {
@@ -138,15 +144,53 @@ class _OrderStatusState extends State<OrderStatus> {
                           var data = snapshot.data!.statusObjects;
                           return ListView.builder(
                             itemCount: data.length,
-                            itemBuilder: (context, index) =>
-                                Text('$index : ${data[index].type}'),
+                            itemBuilder: (context, index) => Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text('${data[index].date.toString()}'),
+                                    Text(
+                                      '${data[index].time}',
+                                    ),
+                                  ],
+                                ),
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 30.h,
+                                      width: 2.w,
+                                      color: Colors.green,
+                                    ),
+                                    CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: Color(0xff27AE60),
+                                      child: Icon(
+                                        Icons.check_box_outlined,
+                                        size: 5,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text('${data[index].type}'),
+                                    Text(
+                                      '${data[index].status}',
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           );
+                        } else {
+                          print("No data");
+                          return Text('Something was wrong!');
                         }
-                        return Text('Something was wrong!');
                       },
                     ),
                   ),
-                ),
+                ],
               ),
               SizedBox(
                 height: 10.h,
